@@ -3,7 +3,7 @@ import tkinter.filedialog, tkinter.messagebox
 from tkinter import ttk
 
 written = 0
-timer = 6
+timer = 10
 writing = 0
 running = True
 
@@ -60,12 +60,20 @@ def stop_app():
 
 def restart_app():
     global running, writing, written, timer
-    text.delete(1.0, "end-1c")
-    written = 0
-    timer = 8
-    writing = 0
     running = True
+    text.delete(1.0, "end-1c")
+    timer = 10
+    written = 0
+    writing = 0
+    warn.config(text="START TYPING...", font=("Ariel", 20, "bold"), bg="#FD9291", fg="#800401")
+    time.config(text="", bg="#FD9291", )
+    window.after(1000, check)
 
+
+def quit_app():
+    global running
+    running = False
+    window.destroy()
 
 while running:
     window = Tk()
@@ -82,7 +90,7 @@ while running:
     title = Label(window, text="DON'T STOP", font=("Ariel", 30, "bold"), fg="#800401", bg="#FD9291")
     title.grid(row=0, column=0, columnspan=3)
 
-    warn = Label(window, text="", font=("Ariel", 20, "bold"), bg="#FD9291")
+    warn = Label(window, text="START TYPING...", font=("Ariel", 20, "bold"), bg="#FD9291", fg="#800401")
     warn.grid(row=1, column=0, columnspan=2, pady=50, sticky='W')
 
     time = Label(window, text="", font=("Ariel", 20, "bold"), bg="#FD9291")
@@ -94,10 +102,11 @@ while running:
     top_frame.columnconfigure(0, weight=10)
 
     text = Text(top_frame, font=("Helvetica", 14))
-    text.grid(row=0, column=0)
+    text.grid(row=0, column=0, columnspan=3)
     text.bind('<KeyPress>', data)
     text.grid_rowconfigure(0, weight=1)
     text.grid_columnconfigure(0, weight=1)
+
 
     stop = Button(window, text="Stop", width=15, height=2, bg="red", fg="black", command=stop_app)
     stop.grid(row=3, column=1, sticky=W)
@@ -105,7 +114,10 @@ while running:
     restart = Button(window, text="Restart", width=15, height=2, bg="red", fg="black", command=restart_app)
     restart.grid(row=3, column=0, sticky=W)
 
-    window.after(3000, check)
+    quit = Button(window, text="Quit", width=15, height=2, bg="red", fg="black", command=quit_app)
+    quit.grid(row=3, column=2, sticky=W)
+
+    window.after(1000, check)
 
     window.mainloop()
 
